@@ -4,16 +4,22 @@ package main.java.com.app;
 import main.java.com.app.DAO.BookDAO;
 import main.java.com.app.DAO.BookDAOImp;
 import main.java.com.app.Service.BookService;
-import main.java.com.app.exception.EmptyFieldException;
 import main.java.com.app.model.Book;
 
 import java.sql.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
+
 
 public class LibraryMain {
+
+    private static boolean isValidISBN(String isbn) {
+        // Regular expression to validate ISBN-13 (XXX-XX-XXXXX-XX-X)
+        String isbnPattern = "\\d{3}-\\d{2}-\\d{5}-\\d{2}-\\d{1}";
+        return !isbn.matches(isbnPattern);
+    }
+
     public static void main(String[] args) {
         BookDAO dao=new BookDAOImp();
         BookService serve=new BookService(dao);
@@ -37,8 +43,16 @@ public class LibraryMain {
             sc.nextLine();
             switch(choice){
                 case 1:
-                    System.out.println("Enter ISBN(xxx-xx-xxxxx-xx-x):");
-                    String bookIsbn = sc.nextLine();
+                    String bookIsbn;
+                    do{
+                        System.out.println("Enter ISBN(xxx-xx-xxxxx-xx-x):");
+                        bookIsbn = sc.nextLine();
+                        if(isValidISBN(bookIsbn)){
+                            System.out.println("Invalid ISBN format! Please enter a valid ISBN.");
+                        }
+                    }while(isValidISBN(bookIsbn));
+
+
                     System.out.println("Enter Title:");
                     String title=sc.nextLine();
                     System.out.println("Enter Author:");
@@ -49,8 +63,13 @@ public class LibraryMain {
                     System.out.println("Book Added");
                     break;
                 case 2:
-                    System.out.println("Enter ISBN(xxx-xx-xxxxx-xx-x):");
-                    bookIsbn=sc.nextLine();
+                    do{
+                        System.out.println("Enter ISBN(xxx-xx-xxxxx-xx-x):");
+                        bookIsbn = sc.nextLine();
+                        if(isValidISBN(bookIsbn)){
+                            System.out.println("Invalid ISBN format! Please enter a valid ISBN.");
+                        }
+                    }while(isValidISBN(bookIsbn));
                     System.out.print("Enter User ID: ");
                     String userId = sc.nextLine();
                     System.out.print("Enter Due Date (YYYY-MM-DD): ");
@@ -63,8 +82,13 @@ public class LibraryMain {
                     }
                     break;
                 case 3:
-                    System.out.print("Enter ISBN: ");
-                    bookIsbn = sc.nextLine();
+                    do{
+                        System.out.println("Enter ISBN(xxx-xx-xxxxx-xx-x):");
+                        bookIsbn = sc.nextLine();
+                        if(isValidISBN(bookIsbn)){
+                            System.out.println("Invalid ISBN format! Please enter a valid ISBN.");
+                        }
+                    }while(isValidISBN(bookIsbn));
                     try {
                         serve.returnBook(bookIsbn);
                         System.out.println("Book returned.");
