@@ -72,4 +72,39 @@ public class LibraryMainTest {
         });
     }
 
+    @Test
+    void testReturnBookWhenBookIsBorrowed() throws Exception{
+        bookService.addBook("123-45-67890-12-3", "Test Book", "Test Author", 2023);
+
+
+        bookService.borrowBook("123-45-67890-12-3", "user-001", Date.valueOf("2024-09-01"));
+
+
+        bookService.returnBook("123-45-67890-12-3");
+
+        Book book=dao.getBookByISBN("123-45-67890-12-3");
+        assertNotNull(book);
+        assertTrue(book.isAvailable());
+    }
+
+    @Test
+    void testReturnBookWhenBookIsNotBorrowed() throws Exception{
+        bookService.addBook("123-45-67890-12-3", "Test Book", "Test Author", 2023);
+
+        bookService.returnBook("123-45-67890-12-3");
+
+        Book book=dao.getBookByISBN("123-45-67890-12-3");
+        assertNotNull(book);
+        assertTrue(book.isAvailable());
+
+    }
+
+    @Test
+    void testReturnBookWhenBookIsNotThere(){
+        assertThrows(BookNotAvailableException.class, () -> {
+            bookService.returnBook("111-11-11111-11-1");
+        });
+    }
+
+
 }
