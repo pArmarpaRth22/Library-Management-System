@@ -31,6 +31,16 @@ public class BookService {
         bookDAO.updateBook(currBook);
     }
 
+    public void returnBook(String ISBN) throws BookNotAvailableException{
+        Book currBook=bookDAO.getBookByISBN(ISBN);
+        if(currBook==null){
+            throw new BookNotAvailableException("Book not found");
+        }
+        currBook.setAvailable(true);
+        bookDAO.updateBook(currBook);
+    }
+
+
 
 
 }
