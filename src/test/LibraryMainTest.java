@@ -107,4 +107,30 @@ public class LibraryMainTest {
     }
 
 
+
+    @Test
+    void testListAvailableBooksSuccessfully() throws Exception{
+
+        bookService.addBook("978-01-34685-99-1", "Test-book-1", "Test-Author-1", 2018);
+        bookService.addBook("978-01-32350-88-4", "Test-book-2", "Test-Author-2", 2008);
+
+        List<Book>  books=bookService.listAvailableBooks();
+
+        assertEquals(2,books.size());
+    }
+
+    @Test
+    void testListAvailableBooksNoBooksAvailable() throws Exception{
+        List<Book> books=dao.getAllBooks().stream().filter(Book::isAvailable).toList();;
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            bookService.listAvailableBooks();
+        });
+
+        assertEquals("No Book is available", exception.getMessage());
+
+
+    }
+
+
 }
