@@ -22,4 +22,15 @@ public class BookService {
     }
 
 
+    public void borrowBook(String ISBN, String userId, Date dueDate) throws BookNotAvailableException {
+        Book currBook=bookDAO.getBookByISBN(ISBN);
+        if(currBook==null || !currBook.isAvailable()){
+            throw new BookNotAvailableException("Book is not available");
+        }
+        currBook.setAvailable(false);
+        bookDAO.updateBook(currBook);
+    }
+
+
+
 }
