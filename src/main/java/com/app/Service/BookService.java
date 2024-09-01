@@ -40,6 +40,15 @@ public class BookService {
         bookDAO.updateBook(currBook);
     }
 
+    public List<Book> listAvailableBooks() throws Exception{
+        List<Book> listOfBooks= bookDAO.getAllBooks().stream().filter(Book::isAvailable).toList();
+        if(listOfBooks.isEmpty()){
+            throw new Exception("No Book is available");
+        }
+        return listOfBooks;
+    }
+
+
 
 
 
