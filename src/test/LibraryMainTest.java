@@ -40,4 +40,45 @@ public class LibraryMainTest {
         assertEquals(pubYear,book.getPublicationYear());
 
     }
+
+    @Test
+    void testBorrowBookWhenBookIsAvailable() throws Exception{
+        bookService.addBook("123-45-67890-12-3", "Test Book", "Test Author", 2023);
+
+        bookService.borrowBook("123-45-67890-12-3", "user-001", Date.valueOf("2024-09-01"));
+
+        Book book=dao.getBookByISBN("123-45-67890-12-3");
+        assertNotNull(book);
+        assertFalse(book.isAvailable());
+    }
+
+    @Test
+    void testBorrowBookWhenBookIsAvailable() throws Exception{
+        bookService.addBook("123-45-67890-12-3", "Test Book", "Test Author", 2023);
+
+        bookService.borrowBook("123-45-67890-12-3", "user-001", Date.valueOf("2024-09-01"));
+
+        Book book=dao.getBookByISBN("123-45-67890-12-3");
+        assertNotNull(book);
+        assertFalse(book.isAvailable());
+    }
+
+    @Test
+    void testBorrowBookWhenBookIsNotAvailable() throws Exception {
+        bookService.addBook("123-45-67890-12-3", "Test Book", "Test Author", 2023);
+
+        bookService.borrowBook("123-45-67890-12-3", "user-001", Date.valueOf("2024-09-01"));
+
+        assertThrows(BookNotAvailableException.class,()->{
+            bookService.borrowBook("123-45-67890-12-3", "user-002", Date.valueOf("2024-09-02"));
+        });
+    }
+
+    @Test
+    void testBorrowBookWhenBookNotFound() {
+        assertThrows(BookNotAvailableException.class,()->{
+            bookService.borrowBook("123-45-69890-12-3", "user-001", Date.valueOf("2024-09-02"));
+        });
+    }
+
 }
